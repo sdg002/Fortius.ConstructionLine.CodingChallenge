@@ -1,31 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using ConstructionLine.CodingChallenge.entities;
+using System.Collections.Generic;
 
 namespace ConstructionLine.CodingChallenge
 {
     public class SearchResults
     {
-        public List<Shirt> Shirts { get; set; }
+        public SearchResults(List<Shirt> shirts, List<SizeCount> sizeCounts, List<ColorCount> colorCounts)
+        {
+            this.Shirts = shirts;
+            this.SizeCounts = sizeCounts;
+            this.ColorCounts = colorCounts;
+        }
 
+        public List<Shirt> Shirts { get; protected set; }
 
-        public List<SizeCount> SizeCounts { get; set; }
+        public List<SizeCount> SizeCounts { get; protected set; }
 
-
-        public List<ColorCount> ColorCounts { get; set; }
-    }
-
-
-    public class SizeCount
-    {
-        public Size Size { get; set; }
-
-        public int Count { get; set; }
-    }
-
-
-    public class ColorCount
-    {
-        public Color Color { get; set; }
-
-        public int Count { get; set; }
+        public List<ColorCount> ColorCounts { get; protected set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace ConstructionLine.CodingChallenge
 {
@@ -15,18 +16,16 @@ namespace ConstructionLine.CodingChallenge
             Name = name;
         }
 
+        public static readonly Size Small = new Size(Guid.NewGuid(), "Small");
+        public static readonly Size Medium = new Size(Guid.NewGuid(), "Medium");
+        public static readonly Size Large = new Size(Guid.NewGuid(), "Large");
 
-        public static Size Small = new Size(Guid.NewGuid(), "Small");
-        public static Size Medium = new Size(Guid.NewGuid(), "Medium");
-        public static Size Large = new Size(Guid.NewGuid(), "Large");
-
-
-        public static List<Size> All = 
-            new List<Size>
+        public static readonly ImmutableList<Size> All =
+            ImmutableList.Create<Size>(new Size[]
             {
                 Small,
                 Medium,
                 Large
-            };
+            });
     }
 }

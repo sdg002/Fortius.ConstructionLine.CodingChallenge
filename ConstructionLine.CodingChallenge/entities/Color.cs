@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace ConstructionLine.CodingChallenge
 {
@@ -15,22 +16,20 @@ namespace ConstructionLine.CodingChallenge
             Name = name;
         }
 
+        public static readonly Color Red = new Color(Guid.NewGuid(), "Red");
+        public static readonly Color Blue = new Color(Guid.NewGuid(), "Blue");
+        public static readonly Color Yellow = new Color(Guid.NewGuid(), "Yellow");
+        public static readonly Color White = new Color(Guid.NewGuid(), "White");
+        public static readonly Color Black = new Color(Guid.NewGuid(), "Black");
 
-        public static Color Red = new Color(Guid.NewGuid(), "Red");
-        public static Color Blue = new Color(Guid.NewGuid(), "Blue");
-        public static Color Yellow = new Color(Guid.NewGuid(), "Yellow");
-        public static Color White = new Color(Guid.NewGuid(), "White");
-        public static Color Black = new Color(Guid.NewGuid(), "Black");
-
-
-        public static List<Color> All =
-            new List<Color>
+        public static readonly ImmutableList<Color> All =
+            ImmutableList.Create<Color>(new Color[]
             {
                 Red,
                 Blue,
                 Yellow,
                 White,
                 Black
-            };
+            });
     }
 }

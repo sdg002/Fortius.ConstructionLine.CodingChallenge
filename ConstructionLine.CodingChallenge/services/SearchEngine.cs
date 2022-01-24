@@ -18,9 +18,7 @@ namespace ConstructionLine.CodingChallenge
         {
             // TODO: search logic goes here.
 
-            return new SearchResults
-            {
-            };
+            return new SearchResults(new List<Shirt>(), new List<entities.SizeCount>(), new List<entities.ColorCount>());
         }
     }
 }
