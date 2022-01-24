@@ -1,5 +1,7 @@
-﻿using ConstructionLine.CodingChallenge.services;
+﻿using ConstructionLine.CodingChallenge.entities;
+using ConstructionLine.CodingChallenge.services;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ConstructionLine.CodingChallenge
 {
@@ -17,8 +19,49 @@ namespace ConstructionLine.CodingChallenge
         public SearchResults Search(SearchOptions options)
         {
             // TODO: search logic goes here.
+            var targetSizeIds = options.Sizes.Select(sz => sz.Id).ToList();
+            var targetColorIds = options.Colors.Select(color => color.Id).ToList();
 
-            return new SearchResults(new List<Shirt>(), new List<entities.SizeCount>(), new List<entities.ColorCount>());
+            var matchingShirts = _shirts
+                .Where(s => targetSizeIds.Contains(s.Size.Id) && targetColorIds.Contains(s.Color.Id))
+                .ToList();
+
+            var groupBySize = matchingShirts.GroupBy(s => s.Size).ToList();
+            var sizeCountsInResults = new List<SizeCount>();
+            foreach (var size in Size.All)
+            {
+                //TODO use null operators
+                var group = groupBySize.SingleOrDefault(g => g.Key.Id == size.Id);
+                if (group == null)
+                {
+                    sizeCountsInResults.Add(new SizeCount(size, 0));
+                }
+                else
+                {
+                    sizeCountsInResults.Add(new SizeCount(size, group.Count()));
+                }
+            }
+
+            var groupByColor = matchingShirts.GroupBy(s => s.Color).ToList();
+            var colorCountsInResults = new List<ColorCount>();
+            foreach (var color in Color.All)
+            {
+                //TODO use null operators
+                var group = groupByColor.SingleOrDefault(g => g.Key.Id == color.Id);
+                if (group == null)
+                {
+                    colorCountsInResults.Add(new ColorCount(color, 0));
+                }
+                else
+                {
+                    colorCountsInResults.Add(new ColorCount(color, group.Count()));
+                }
+            }
+
+            return new SearchResults(
+                matchingShirts,
+                sizeCountsInResults,
+                colorCountsInResults);
         }
     }
 }

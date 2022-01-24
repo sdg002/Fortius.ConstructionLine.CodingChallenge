@@ -31,5 +31,10 @@ namespace ConstructionLine.CodingChallenge
                 White,
                 Black
             });
+
+        public override string ToString()
+        {
+            return $"Id={this.Id}   Name={this.Name}";
+        }
     }
 }
