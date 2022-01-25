@@ -5,19 +5,23 @@ using System.Linq;
 
 namespace ConstructionLine.CodingChallenge
 {
+    /// <summary>
+    /// Build an index by color and size for better performance!
+    /// Note - the performance gains begin to show up with larger number of shirts
+    /// </summary>
     public class FasterSearchEngine : ISearchEngine
     {
         private readonly List<Shirt> _shirts;
-        private readonly List<IGrouping<System.Guid, Shirt>> _shirtsGroupedByColor;
-        private readonly List<IGrouping<System.Guid, Shirt>> _shirtsGroupedBySize;
+        private readonly List<IGrouping<System.Guid, Shirt>> _shirtsIndexedByColor;
+        private readonly List<IGrouping<System.Guid, Shirt>> _shirtsIndexedBySize;
 
         public FasterSearchEngine(List<Shirt> shirts)
         {
             _shirts = shirts;
 
             // TODO: data preparation and initialisation of additional data structures to improve performance goes here.
-            _shirtsGroupedByColor = _shirts.GroupBy(s => s.Color.Id).ToList();
-            _shirtsGroupedBySize = _shirts.GroupBy(s => s.Size.Id).ToList();
+            _shirtsIndexedByColor = _shirts.GroupBy(s => s.Color.Id).ToList();
+            _shirtsIndexedBySize = _shirts.GroupBy(s => s.Size.Id).ToList();
         }
 
         public SearchResults Search(SearchOptions options)
@@ -39,7 +43,7 @@ namespace ConstructionLine.CodingChallenge
             {
                 foreach (var colorOption in options.Colors)
                 {
-                    var shirtsWithSpecifiedColors = _shirtsGroupedByColor.Single(g => g.Key == colorOption.Id).ToList();
+                    var shirtsWithSpecifiedColors = _shirtsIndexedByColor.Single(g => g.Key == colorOption.Id).ToList();
                     matchingShirts.AddRange(shirtsWithSpecifiedColors);
                 }
             }
@@ -47,14 +51,14 @@ namespace ConstructionLine.CodingChallenge
             {
                 foreach (var sizeOption in options.Sizes)
                 {
-                    var shirtsWithSpecifiedSizes = _shirtsGroupedBySize.Single(g => g.Key == sizeOption.Id).ToList();
+                    var shirtsWithSpecifiedSizes = _shirtsIndexedBySize.Single(g => g.Key == sizeOption.Id).ToList();
                     matchingShirts.AddRange(shirtsWithSpecifiedSizes);
                 }
             }
             else
             {
-                var shirtsWithSpecifiedColors = _shirtsGroupedByColor.Where(g => targetColorIds.Contains(g.Key)).SelectMany(g => g).ToList();
-                var shirtsWithSpecifiedSizes = _shirtsGroupedBySize.Where(g => targetSizeIds.Contains(g.Key)).SelectMany(g => g).ToList();
+                var shirtsWithSpecifiedColors = _shirtsIndexedByColor.Where(g => targetColorIds.Contains(g.Key)).SelectMany(g => g).ToList();
+                var shirtsWithSpecifiedSizes = _shirtsIndexedBySize.Where(g => targetSizeIds.Contains(g.Key)).SelectMany(g => g).ToList();
                 var unionHashset = new HashSet<Shirt>();
                 shirtsWithSpecifiedColors.ForEach(s => unionHashset.Add(s));
                 shirtsWithSpecifiedSizes.ForEach(s => unionHashset.Add(s));
