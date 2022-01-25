@@ -37,12 +37,26 @@ namespace ConstructionLine.CodingChallenge.Tests
                 var sizeCount = sizeCounts.SingleOrDefault(s => s.Size.Id == size.Id);
                 Assert.That(sizeCount, Is.Not.Null, $"Size count for '{size.Name}' not found in results");
 
-                var expectedSizeCount = shirts
-                    .Count(s => s.Size.Id == size.Id
-                                && (!searchOptions.Colors.Any() || searchOptions.Colors.Select(c => c.Id).Contains(s.Color.Id)));
+                if (searchOptions.Colors.Any())
+                {
+                    var expectedSizeCount = shirts
+                        .Count(s => s.Size.Id == size.Id
+                                    && (searchOptions.Colors.Select(c => c.Id).Contains(s.Color.Id))
+                                    && (!searchOptions.Sizes.Any() || searchOptions.Sizes.Select(sz => sz.Id).Contains(s.Size.Id))
+                                    );
 
-                Assert.That(sizeCount.Count, Is.EqualTo(expectedSizeCount),
-                    $"Size count for '{sizeCount.Size.Name}' showing '{sizeCount.Count}' should be '{expectedSizeCount}'");
+                    Assert.That(sizeCount.Count, Is.EqualTo(expectedSizeCount),
+                        $"Size count for '{sizeCount.Size.Name}' showing '{sizeCount.Count}' should be '{expectedSizeCount}'");
+                }
+                else
+                {
+                    var expectedSizeCount = shirts
+                        .Count(s => s.Size.Id == size.Id
+                                    && searchOptions.Sizes.Select(sz => sz.Id).Contains(s.Size.Id));
+
+                    Assert.That(sizeCount.Count, Is.EqualTo(expectedSizeCount),
+                        $"Size count for '{sizeCount.Size.Name}' showing '{sizeCount.Count}' should be '{expectedSizeCount}'");
+                }
             }
         }
 
@@ -55,12 +69,25 @@ namespace ConstructionLine.CodingChallenge.Tests
                 var colorCount = colorCounts.SingleOrDefault(s => s.Color.Id == color.Id);
                 Assert.That(colorCount, Is.Not.Null, $"Color count for '{color.Name}' not found in results");
 
-                var expectedColorCount = shirts
-                    .Count(c => c.Color.Id == color.Id
-                                && (!searchOptions.Sizes.Any() || searchOptions.Sizes.Select(s => s.Id).Contains(c.Size.Id)));
+                if (searchOptions.Sizes.Any())
+                {
+                    var expectedColorCount = shirts
+                        .Count(s => s.Color.Id == color.Id
+                                    && (searchOptions.Sizes.Select(sz => sz.Id).Contains(s.Size.Id))
+                                    && (!searchOptions.Colors.Any() || searchOptions.Colors.Select(c => c.Id).Contains(s.Color.Id)));
 
-                Assert.That(colorCount.Count, Is.EqualTo(expectedColorCount),
-                    $"Color count for '{colorCount.Color.Name}' showing '{colorCount.Count}' should be '{expectedColorCount}'");
+                    Assert.That(colorCount.Count, Is.EqualTo(expectedColorCount),
+                        $"Color count for '{colorCount.Color.Name}' showing '{colorCount.Count}' should be '{expectedColorCount}'");
+                }
+                else
+                {
+                    var expectedColorCount = shirts
+                        .Count(s => s.Color.Id == color.Id
+                                    && (searchOptions.Colors.Select(col => col.Id).Contains(s.Color.Id)));
+
+                    Assert.That(colorCount.Count, Is.EqualTo(expectedColorCount),
+                        $"Color count for '{colorCount.Color.Name}' showing '{colorCount.Count}' should be '{expectedColorCount}'");
+                }
             }
         }
     }
