@@ -19,5 +19,10 @@ namespace ConstructionLine.CodingChallenge
             Size = size;
             Color = color;
         }
+
+        public override string ToString()
+        {
+            return $"Name={this.Name} Size={this.Size.Name} Color={this.Color.Name}";
+        }
     }
 }

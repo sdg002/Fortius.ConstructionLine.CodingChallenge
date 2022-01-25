@@ -21,8 +21,57 @@ namespace ConstructionLine.CodingChallenge.Tests
 
             var searchOptions = new SearchOptions
             {
-                Colors = new List<Color> {Color.Red},
-                Sizes = new List<Size> {Size.Small}
+                Colors = new List<Color> { Color.Red },
+                Sizes = new List<Size> { Size.Small }
+            };
+
+            var results = searchEngine.Search(searchOptions);
+
+            AssertResults(results.Shirts, searchOptions);
+            AssertSizeCounts(shirts, searchOptions, results.SizeCounts);
+            AssertColorCounts(shirts, searchOptions, results.ColorCounts);
+        }
+
+        [Test]
+        public void When_NoColor_Or_NoSize_IsSpecified()
+        {
+            var shirts = new List<Shirt>
+            {
+                new Shirt(Guid.NewGuid(), "Red - Small", Size.Small, Color.Red),
+                new Shirt(Guid.NewGuid(), "Black - Medium", Size.Medium, Color.Black),
+                new Shirt(Guid.NewGuid(), "Blue - Large", Size.Large, Color.Blue),
+            };
+
+            var searchEngine = new SearchEngine(shirts);
+
+            var searchOptions = new SearchOptions
+            {
+                Colors = new List<Color> { },
+                Sizes = new List<Size> { }
+            };
+
+            var results = searchEngine.Search(searchOptions);
+
+            Assert.That(results.Shirts.Count, Is.Zero);
+            Assert.That(results.ColorCounts.TrueForAll(c => c.Count == 0));
+            Assert.That(results.SizeCounts.TrueForAll(s => s.Count == 0));
+        }
+
+        [Test]
+        public void When_OnlySizeIsSpecified()
+        {
+            var shirts = new List<Shirt>
+            {
+                new Shirt(Guid.NewGuid(), "Red - Small", Size.Small, Color.Red),
+                new Shirt(Guid.NewGuid(), "Black - Medium", Size.Medium, Color.Black),
+                new Shirt(Guid.NewGuid(), "Blue - Large", Size.Large, Color.Blue),
+            };
+
+            var searchEngine = new SearchEngine(shirts);
+
+            var searchOptions = new SearchOptions
+            {
+                Sizes = new List<Size> { Size.Small }
             };
 
             var results = searchEngine.Search(searchOptions);

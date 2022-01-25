@@ -18,7 +18,7 @@ namespace ConstructionLine.CodingChallenge.entities
 
         public override string ToString()
         {
-            return $"Color={this.Color.Id} Count={this.Count}";
+            return $"Color={this.Color.Name} Count={this.Count}";
         }
     }
 }

@@ -19,11 +19,18 @@ namespace ConstructionLine.CodingChallenge
         public SearchResults Search(SearchOptions options)
         {
             // TODO: search logic goes here.
-            var targetSizeIds = options.Sizes.Select(sz => sz.Id).ToList();
-            var targetColorIds = options.Colors.Select(color => color.Id).ToList();
+            var targetSizeIds = options.Sizes.Select(sz => sz.Id).ToHashSet();
+            var targetColorIds = options.Colors.Select(color => color.Id).ToHashSet();
+
+            if (!targetSizeIds.Any() && !targetColorIds.Any())
+            {
+                var sizeCounts = Size.All.Select(s => new SizeCount(s, 0)).ToList();
+                var colorCounts = Color.All.Select(c => new ColorCount(c, 0)).ToList();
+                return new SearchResults(new List<Shirt>(), sizeCounts, colorCounts);
+            }
 
             var matchingShirts = _shirts
-                .Where(s => targetSizeIds.Contains(s.Size.Id) && targetColorIds.Contains(s.Color.Id))
+                .Where(s => (!targetSizeIds.Any() || targetSizeIds.Contains(s.Size.Id)) && (!targetColorIds.Any() || targetColorIds.Contains(s.Color.Id)))
                 .ToList();
 
             var groupBySize = matchingShirts.GroupBy(s => s.Size).ToList();
