@@ -7,19 +7,23 @@ using NUnit.Framework;
 namespace ConstructionLine.CodingChallenge.Tests
 {
     [TestFixture]
-    public class SearchEnginePerformanceTests : SearchEngineTestsBase
+    public class FasterSearchEnginePerformanceTests : SearchEngineTestsBase
     {
         private List<Shirt> _shirts;
-        private SearchEngine _searchEngine;
+        private FasterSearchEngine _searchEngine;
+
+        private const int ExpectedPerformance = 100;
+        private const int CountOfShirts = 1000000;
 
         [SetUp]
         public void Setup()
+
         {
-            var dataBuilder = new SampleDataBuilder(50000);
+            var dataBuilder = new SampleDataBuilder(CountOfShirts);
 
             _shirts = dataBuilder.CreateShirts();
 
-            _searchEngine = new SearchEngine(_shirts);
+            _searchEngine = new FasterSearchEngine(_shirts);
         }
 
         [Test]
@@ -37,7 +41,7 @@ namespace ConstructionLine.CodingChallenge.Tests
 
             sw.Stop();
             Console.WriteLine($"Test fixture finished in {sw.ElapsedMilliseconds} milliseconds");
-            Assert.That(sw.ElapsedMilliseconds, Is.LessThan(100));
+            Assert.That(sw.ElapsedMilliseconds, Is.LessThan(ExpectedPerformance));
 
             AssertResults(results.Shirts, options);
             AssertSizeCounts(_shirts, options, results.SizeCounts);

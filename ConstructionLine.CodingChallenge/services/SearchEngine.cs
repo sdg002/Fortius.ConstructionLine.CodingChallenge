@@ -37,32 +37,18 @@ namespace ConstructionLine.CodingChallenge
             var sizeCountsInResults = new List<SizeCount>();
             foreach (var size in Size.All)
             {
-                //TODO use null operators
                 var group = groupBySize.SingleOrDefault(g => g.Key.Id == size.Id);
-                if (group == null)
-                {
-                    sizeCountsInResults.Add(new SizeCount(size, 0));
-                }
-                else
-                {
-                    sizeCountsInResults.Add(new SizeCount(size, group.Count()));
-                }
+                var count = (group?.Count() ?? 0);
+                sizeCountsInResults.Add(new SizeCount(size, count));
             }
 
             var groupByColor = matchingShirts.GroupBy(s => s.Color).ToList();
             var colorCountsInResults = new List<ColorCount>();
             foreach (var color in Color.All)
             {
-                //TODO use null operators
                 var group = groupByColor.SingleOrDefault(g => g.Key.Id == color.Id);
-                if (group == null)
-                {
-                    colorCountsInResults.Add(new ColorCount(color, 0));
-                }
-                else
-                {
-                    colorCountsInResults.Add(new ColorCount(color, group.Count()));
-                }
+                var count = (group?.Count() ?? 0);
+                colorCountsInResults.Add(new ColorCount(color, count));
             }
 
             return new SearchResults(
